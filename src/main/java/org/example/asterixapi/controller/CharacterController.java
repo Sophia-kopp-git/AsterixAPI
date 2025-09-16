@@ -28,8 +28,13 @@ public class CharacterController {
 
     @GetMapping("/search")
     public List<Character> getCharacterByProfession(@RequestParam String profession){
-        return repo.getCharactersByProfession(profession);
+        return repo.getCharactersByProfessionIgnoreCase(profession);
     }
+    @GetMapping("/avgAge")
+    public double getAvgAgeByProfession(@RequestParam String profession){
+        return repo.getCharactersByProfessionIgnoreCase(profession).stream().mapToDouble(x-> x.age()).average().orElse(0);
+    }
+
 
     @PostMapping
     public Character addCharacter(@RequestBody Character character){
