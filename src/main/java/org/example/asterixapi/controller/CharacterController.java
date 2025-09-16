@@ -1,7 +1,7 @@
 package org.example.asterixapi.controller;
 
 import org.example.asterixapi.model.Character;
-import org.example.asterixapi.repository.CharacterRepo;
+import org.example.asterixapi.service.CharacterService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,51 +10,47 @@ import java.util.List;
 @RequestMapping("/api/asterix/characters")
 public class CharacterController {
 
-    private final CharacterRepo repo;
+    private final CharacterService service;
 
-    public CharacterController(CharacterRepo repo) {
-        this.repo = repo;
+    public CharacterController(CharacterService service) {
+        this.service = service;
     }
 
+
     @GetMapping
-    public List<Character> getCharacters(){
-        return repo.findAll();
+    public List<Character> getCharacters() {
+        return service.getCharacters();
     }
 
     @GetMapping("/{id}")
-    public Character getCharacterById(@PathVariable String id){
-        return repo.findById(id).orElse(null);
+    public Character getCharacterById(@PathVariable String id) {
+        return service.getCharacterById(id);
     }
 
     @GetMapping("/search")
-    public List<Character> getCharacterByProfession(@RequestParam String profession){
-        return repo.getCharactersByProfessionIgnoreCase(profession);
+    public List<Character> getCharacterByProfession(@RequestParam String profession) {
+        return service.getCharacterByProfession(profession);
     }
+
     @GetMapping("/avgAge")
-    public double getAvgAgeByProfession(@RequestParam String profession){
-        return repo.getCharactersByProfessionIgnoreCase(profession).stream().mapToDouble(x-> x.age()).average().orElse(0);
+    public double getAvgAgeByProfession(@RequestParam String profession) {
+        return service.getAvgAgeByProfession(profession);
     }
 
 
     @PostMapping
-    public Character addCharacter(@RequestBody Character character){
-        repo.save(character);
-        return character;
+    public Character addCharacter(@RequestBody Character character) {
+        return service.addCharacter(character);
     }
 
     @PutMapping("/{id}")
-    public Character updateExistingCharacter(@PathVariable String id, @RequestBody Character character){
-        Character oldCharacter = repo.findById(id).orElse(null);
-        if(oldCharacter == null){
-            repo.save(oldCharacter.withAge(character.age())
-                    .withName(character.name()));
-        }
-        return character;
+    public Character updateExistingCharacter(@PathVariable String id, @RequestBody Character character) {
+        return service.updateExistingCharacter(id, character);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteCharacter(@PathVariable String id){
-        repo.deleteById(id);
+    public void deleteCharacter(@PathVariable String id) {
+        service.deleteCharacter(id);
     }
 
 }
