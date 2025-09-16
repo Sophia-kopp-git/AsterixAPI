@@ -26,6 +26,11 @@ public class CharacterController {
         return repo.findById(id).orElse(null);
     }
 
+    @GetMapping("/search")
+    public List<Character> getCharacterByProfession(@RequestParam String profession){
+        return repo.getCharactersByProfession(profession);
+    }
+
     @PostMapping
     public Character addCharacter(@RequestBody Character character){
         repo.save(character);
