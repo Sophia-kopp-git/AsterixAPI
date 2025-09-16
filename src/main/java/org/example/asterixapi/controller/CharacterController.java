@@ -1,5 +1,6 @@
 package org.example.asterixapi.controller;
 
+import org.example.asterixapi.dto.CharacterDTO;
 import org.example.asterixapi.model.Character;
 import org.example.asterixapi.service.CharacterService;
 import org.springframework.web.bind.annotation.*;
@@ -39,12 +40,12 @@ public class CharacterController {
 
 
     @PostMapping
-    public Character addCharacter(@RequestBody Character character) {
+    public Character addCharacter(@RequestBody CharacterDTO character) {
         return service.addCharacter(character);
     }
 
     @PutMapping("/{id}")
-    public Character updateExistingCharacter(@PathVariable String id, @RequestBody Character character) {
+    public Character updateExistingCharacter(@PathVariable String id, @RequestBody CharacterDTO character) {
         return service.updateExistingCharacter(id, character);
     }
 

@@ -1,18 +1,22 @@
 package org.example.asterixapi.service;
 
+import org.example.asterixapi.dto.CharacterDTO;
 import org.example.asterixapi.model.Character;
 import org.example.asterixapi.repository.CharacterRepo;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class CharacterService {
 
+    private final IdService idService;
     private final CharacterRepo repo;
 
-    public CharacterService(CharacterRepo repo) {
+    public CharacterService(IdService idService, CharacterRepo repo) {
+        this.idService = idService;
         this.repo = repo;
     }
 
@@ -35,18 +39,21 @@ public class CharacterService {
                 .orElse(0);
     }
 
-    public Character addCharacter(Character character) {
+    public Character addCharacter(CharacterDTO characterDto) {
+        Character character = new Character(idService.getUuid(),
+                characterDto.name(), characterDto.age(), characterDto.profession());
         return repo.save(character);
     }
 
-    public Character updateExistingCharacter(String id, Character character) {
+    public Character updateExistingCharacter(String id, CharacterDTO characterDto) {
         Character oldCharacter = repo.findById(id).orElse(null);
-        if (oldCharacter == null) {
-            repo.save(oldCharacter
-                    .withAge(character.age())
-                    .withName(character.name()));
+        if (oldCharacter != null) {
+            return repo.save(oldCharacter
+                    .withAge(characterDto.age())
+                    .withName(characterDto.name()));
+        } else {
+            throw new NoSuchElementException("No Character with id: " + id);
         }
-        return character;
     }
 
     public void deleteCharacter(String id) {
