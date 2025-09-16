@@ -32,6 +32,10 @@ public class CharacterController {
     public List<Character> getCharacterByProfession(@RequestParam String profession) {
         return service.getCharacterByProfession(profession);
     }
+    @GetMapping("/searchAge")
+    public List<Character> getCharacterByMaximumAge(@RequestParam int age) {
+        return service.getAllCharactersWithMaximumAge(age);
+    }
 
     @GetMapping("/avgAge")
     public double getAvgAgeByProfession(@RequestParam String profession) {

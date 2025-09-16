@@ -24,6 +24,10 @@ public class CharacterService {
         return repo.findAll();
     }
 
+    public List<Character> getAllCharactersWithMaximumAge(int age) {
+        return repo.getCharactersByAgeIsLessThanEqual(age);
+    }
+
     public Character getCharacterById(String id) {
         return repo.findById(id).orElse(null);
     }
@@ -42,7 +46,8 @@ public class CharacterService {
     public Character addCharacter(CharacterDTO characterDto) {
         Character character = new Character(idService.getUuid(),
                 characterDto.name(), characterDto.age(), characterDto.profession());
-        return repo.save(character);
+        repo.save(character);
+        return repo.findById(character.id()).orElse(null);
     }
 
     public Character updateExistingCharacter(String id, CharacterDTO characterDto) {

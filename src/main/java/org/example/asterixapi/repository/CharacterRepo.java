@@ -10,4 +10,7 @@ import java.util.List;
 public interface CharacterRepo extends MongoRepository<Character, String> {
 
     List<Character> getCharactersByProfessionIgnoreCase(String profession);
+    List<Character> getCharactersByAgeIsLessThanEqual(int age);
+
+    String id(String id);
 }
