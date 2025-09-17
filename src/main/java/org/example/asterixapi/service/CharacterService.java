@@ -53,16 +53,19 @@ public class CharacterService {
     public Character updateExistingCharacter(String id, CharacterDTO characterDto) {
         Character oldCharacter = repo.findById(id).orElse(null);
         if (oldCharacter != null) {
-            return repo.save(oldCharacter
+            repo.save(oldCharacter
                     .withAge(characterDto.age())
                     .withName(characterDto.name()));
+            return oldCharacter;
         } else {
             throw new NoSuchElementException("No Character with id: " + id);
         }
     }
 
     public void deleteCharacter(String id) {
+        if(repo.existsById(id)){
         repo.deleteById(id);
+        }
     }
 
 }

@@ -77,24 +77,34 @@ class CharacterServiceTest {
     @Test
     void updateExistingCharacter() {
         //Given
+        String id = "1";
         CharacterDTO characterDTO = new CharacterDTO("name1", 22, "profession1");
         Character character = new Character("1","name1", 22, "profession1");
         CharacterRepo mockRepo = mock(CharacterRepo.class);
         IdService mockIdService = mock(IdService.class);
         CharacterService service = new CharacterService(mockIdService, mockRepo);
         //when
+        when(mockRepo.findById(id)).thenReturn(Optional.of(character));
+        Character actual = service.updateExistingCharacter("1", characterDTO);
         //then
+        verify(mockRepo).findById(id);
+        verify(mockRepo).save(character);
+        assertEquals(actual, character);
     }
 
     @Test
     void deleteCharacter() {
         //Given
-        CharacterDTO characterDTO = new CharacterDTO("name1", 22, "profession1");
-        Character character = new Character("1","name1", 22, "profession1");
+        String id = "1";
         CharacterRepo mockRepo = mock(CharacterRepo.class);
         IdService mockIdService = mock(IdService.class);
         CharacterService service = new CharacterService(mockIdService, mockRepo);
         //when
+        when(mockRepo.existsById(id)).thenReturn(true);
+        doNothing().when(mockRepo).deleteById(id);
+        service.deleteCharacter(id);
         //then
+        verify(mockRepo).existsById(id);
+        verify(mockRepo).deleteById(id);
     }
 }
